@@ -20,8 +20,13 @@ https://reactnative.dev/
 https://reactnative.directory/
 https://docs.expo.dev/versions/latest/
 https://snack.expo.dev/
+https://icons.expo.fyi/
 ```
 
 ```
 npx expo install expo-location
 ```
+
+````
+45847c92c4b17407254d3d738d721454```
+````

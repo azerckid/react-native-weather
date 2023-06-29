@@ -9,9 +9,19 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
+import { Fontisto } from "@expo/vector-icons";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const API_KEY = "45847c92c4b17407254d3d738d721454";
+const API_KEY = "fake api key";
+const icons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Rain: "rains",
+  Drizzle: "rain",
+  Thunderstorm: "lightning",
+};
 
 export default function App() {
   const [location, setLocation] = useState();
@@ -34,7 +44,9 @@ export default function App() {
         { latitude, longitude },
         { useGoogleMaps: false }
       );
-      setCity(currLocation[0].region);
+      setCity(
+        currLocation[0].city ? currLocation[0].city : currLocation[0].region
+      );
 
       fetch(
         `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}`
@@ -66,15 +78,29 @@ export default function App() {
         contentContainerStyle={styles.weather}
       >
         {days.length === 0 ? (
-          <View style={styles.day}>
+          <View style={{ ...styles.day, alignItems: "center" }}>
             <ActivityIndicator color="white" size="large" />
           </View>
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <Text style={styles.temp}>
-                {parseFloat(day.temp.day - 273.15).toFixed(0)}°
-              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.temp}>
+                  {parseFloat(day.temp.day - 273.15).toFixed(0)}°
+                </Text>
+                <Fontisto
+                  name={icons[day.weather[0].main]}
+                  size={34}
+                  color="white"
+                />
+              </View>
               <Text style={styles.desc}>{day.weather[0].main}</Text>
               <Text style={styles.description}>
                 {day.weather[0].description}
@@ -104,11 +130,13 @@ const styles = StyleSheet.create({
   weather: {},
   day: {
     width: SCREEN_WIDTH,
-    alignItems: "center",
+    paddingHorizontal: 40,
+    alignItems: "flex-start",
   },
   temp: {
     marginTop: 50,
-    fontSize: 150,
+    fontSize: 120,
+    color: "white",
   },
   desc: {
     marginTop: -30,
